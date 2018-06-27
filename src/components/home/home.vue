@@ -18,7 +18,6 @@
 <script>
   import HHeader from 'components/h-header/h-header'
   import Tab from 'components/tab/tab'
-  import BaseDialog from 'components/base/dialog'
 
   export default {
     name: "home",
@@ -52,8 +51,7 @@
     },
     components: {
       HHeader,
-      Tab,
-      BaseDialog
+      Tab
     },
   }
 </script>

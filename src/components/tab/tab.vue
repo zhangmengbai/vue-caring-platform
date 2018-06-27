@@ -78,7 +78,7 @@
 
   .tab li.active,
   .tab li:hover {
-    background: #4fc08d;
+    background: #666666;
     color: #fff;
   }
 </style>
