@@ -23,7 +23,7 @@
         <div class="font-icon">
           <font-awesome-icon :icon="['fas','users']" size="lg"/>
         </div>
-        党员管理
+        党员管理啊
       </router-link>
       <router-link tag="li" class="ul-item" to="/" >
         <div class="font-icon">
