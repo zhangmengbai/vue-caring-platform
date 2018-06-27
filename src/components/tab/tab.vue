@@ -7,38 +7,46 @@
         </div>
         系统管理
       </router-link>
+
       <router-link tag="li" class="ul-item" to="/home/api-management" active-class="active">
         <div class="font-icon">
           <font-awesome-icon :icon="['fas','cogs']" size="lg"/>
         </div>
         短信接口管理
       </router-link>
+
       <router-link tag="li" class="ul-item" to="/home/log-management" active-class="active">
         <div class="font-icon">
           <font-awesome-icon :icon="['fas','calendar-alt']" size="lg"/>
         </div>
         日志管理
       </router-link>
+
       <router-link tag="li" class="ul-item" to="/home/personnel-management" active-class="active">
         <div class="font-icon">
           <font-awesome-icon :icon="['fas','users']" size="lg"/>
         </div>
-        党员管理啊
+        党员管理
       </router-link>
-      <router-link tag="li" class="ul-item" to="/" >
+
+      <li tag="li" class="ul-item" @click="exitConfirm" active-class="active">
         <div class="font-icon">
           <font-awesome-icon :icon="['fas','sign-out-alt']" size="lg"/>
         </div>
         退出
-      </router-link>
+      </li>
     </ul>
-
   </div>
 </template>
 
 <script>
   export default {
-    name: "tab"
+    name: "tab",
+    methods:{
+      exitConfirm(){
+        this.$emit("showDialog", true)
+      }
+    }
   }
 </script>
 
