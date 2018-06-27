@@ -10,13 +10,18 @@ import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fort
 import solid from '@fortawesome/fontawesome-free-solid'
 import regular from '@fortawesome/fontawesome-free-regular'
 import brands from '@fortawesome/fontawesome-free-brands'
+import Page from 'components/base/page'
+import  BaseDialog from 'components/base/BaseDialog'
+
 
 fontawesome.library.add(solid,brands,regular)
+
 // dom.watch() //这将启动初始i标签替换svg标签和配置一个MutationObserver
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)
 Vue.component('font-awesome-layers-text', FontAwesomeLayersText)
-
+Vue.component('page', Page)
+Vue.component('base-dialog', BaseDialog)
 
 
 /* eslint-disable no-new */

@@ -46,7 +46,7 @@
       </tr>
       <!--表格体-->
       <tr>
-        <td>测试</td>
+        <td><input type="checkbox" class="td-checkbox">测试</td>
         <td>测试</td>
         <td>测试</td>
         <td>测试</td>
@@ -54,148 +54,22 @@
         <td class="check-td">修改</td>
         <td class="check-td">删除</td>
       </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
-      <tr>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-        <td>测试</td>
-      </tr>
     </table>
+    <div style="display: flex;justify-content: space-between;width: 100%;">
     <div class="batch">
-      <input type="checkbox" class="batch-checkbox">
-      批量操作
+      <div style="display: flex;color: #888888;">
+        <input type="checkbox" class="batch-checkbox" >
+        批量操作
+      </div>
+      <div style="display: flex;margin-left: 50px;color: #888888;">
+        <input type="checkbox" class="batch-checkbox">
+        删除
+      </div>
     </div>
-
+      <page></page>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -203,7 +77,9 @@
     name: "personnel-management",
     data() {
       return {
-        personnelList: {}
+        personnelList: {
+
+        }
       }
     }
   }
@@ -212,7 +88,7 @@
 <style scoped>
   table {
     width: 100%;
-    height: 640px;
+    /*height: 640px;*/
     border-spacing: 0;
     text-align: center;
   }
@@ -264,7 +140,8 @@
   .title {
     width: 150px;
     color: #607D8B;
-    font-size: 15px;
+    font-size: 20px;
+    font-weight: bold;
   }
 
   .features {
@@ -280,18 +157,22 @@
     width: 100%;
     height: 45px;
     line-height: 45px;
-    font-size: 13px;
+    font-size: 14px;
     text-align: center;
     color: #607D8B;
+    cursor: pointer;
   }
 
   .batch {
+    display: flex;
     margin-top: 10px;
     font-size: 14px;
   }
 
   .batch-checkbox {
-    margin-right: 20px;
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
   }
 
   .check-td {
@@ -301,5 +182,12 @@
 
   .font-icon {
     width: 30px;
+  }
+
+  .td-checkbox {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
   }
 </style>
