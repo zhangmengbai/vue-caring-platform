@@ -110,8 +110,9 @@
       }
     },
     methods: {
+      // 路由跳转的方法 ps：判断如果为manger就显示管理员界面
       itemClick(where) {
-        if (where == "manger") {
+        if (where === "manger") {
           this.isContentShow = true
         }
         else {

@@ -57,9 +57,7 @@
     /*height: 100%;*/
     line-height: 20px;
     text-align: center;
-    border: 1px solid rgba(187, 187, 187, 1);
-    border-right: 0;
-    border-bottom: 0;
+    border: 0;
   }
 
   .font-icon {
