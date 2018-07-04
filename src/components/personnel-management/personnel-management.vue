@@ -73,7 +73,7 @@
           <input type="button" class="delete-btn" value="删除选中项" @click="batchDeletion()">
         </div>
       </div>
-      <page :listParam="personnelListParam"></page>
+      <page :personnelListParam="personnelListParam"></page>
     </div>
   </div>
 
