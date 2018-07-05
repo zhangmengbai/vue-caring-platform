@@ -1,15 +1,10 @@
 <template>
-  <div>
     <div class="dialog-wrap">
       <div class="dialog-cover"  v-if="isShow" @click="closeMyself()"></div>
       <transition name="drop">
-        <div class="dialog-content"  v-if="isShow">
-          <p class="dialog-close" @click="closeMyself()">x</p>
-          <slot>empty</slot>
-        </div>
+        <slot v-if="isShow">empty</slot>
       </transition>
     </div>
-  </div>
 </template>
 
 <script>
@@ -22,29 +17,30 @@
     },
     data () {
       return {
-
       }
     },
     methods: {
-      closeMyself () {
-        this.$emit('on-close')
-      }
+        closeMyself () {
+          this.$emit('on-close')
+        }
     }
   }
 </script>
 
 <style scoped>
   .drop-enter-active {
-    transition: all .5s ease;
+    transition: all 1s ease;
   }
   .drop-leave-active {
-    transition: all .3s ease;
+    transition: all 1s ease;
   }
   .drop-enter {
-    transform: translateY(-500px);
+    transform: translateY(-200px);
+    opacity: 0;
   }
   .drop-leave-active {
-    transform: translateY(-500px);
+    transform: translateY(-200px);
+    opacity: 0;
   }
 
   .dialog-wrap {
@@ -62,30 +58,5 @@
     width: 100%;
     height: 100%;
   }
-  .dialog-content {
-    width: 50%;
-    position: fixed;
-    max-height: 50%;
-    overflow: auto;
-    background: #fff;
-    top: 20%;
-    left: 50%;
-    margin-left: -25%;
-    z-index: 10;
-    border: 2px solid #464068;
-    padding: 2%;
-    line-height: 1.6;
-  }
-  .dialog-close {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    cursor: pointer;
-  }
-  .dialog-close:hover {
-    color: #4fc08d;
-  }
+
 </style>

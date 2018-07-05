@@ -4,7 +4,7 @@
       <div class="header-top">
         <div class="title">党员管理</div>
         <div class="features">
-          <div class="features-item">
+          <div class="features-item" @click="createPersonnel()">
             <div class="font-icon">
               <font-awesome-icon :icon="['fas','plus']" size="lg"/>
             </div>
@@ -73,10 +73,41 @@
           <input type="button" class="delete-btn" value="删除选中项" @click="batchDeletion()">
         </div>
       </div>
-      <page :personnelListParam="personnelListParam"></page>
+      <page :personnelListParam="personnelListParam" :personnelList="personnelList"></page>
     </div>
+    <!--二次确认删除窗口-->
+    <base-dialog :is-show="isShowDialog" @on-close="hideDialog('isShowDialog')">
+      <h3>是否退出删除</h3>
+      <div class="dialog_button">
+        <button @click="isRemove(true)">确认</button>
+        <button @click="isRemove(false)">取消</button>
+      </div>
+    </base-dialog>
+    <!--新建党员信息窗口-->
+    <base-dialog :is-show="isShowCreate" @on-close="hideDialog('isShowCreate')">
+      <div class="dialog-content">
+        <p class="dialog-close" @click="close(false)">x</p>
+        <h2>请填写党员信息</h2>
+        <div class="from">
+          <label>党员姓名：
+            <input class="from-input" type="text">
+          </label>
+          <label>党员姓名：
+            <input class="from-input" type="text">
+          </label>
+          <label>党员姓名：
+            <input class="from-input" type="text">
+          </label>
+          <label>党员姓名：
+            <input class="from-input" type="text">
+          </label>
+          <label>党员姓名：
+            <input class="from-input" type="text">
+          </label>
+        </div>
+      </div>
+    </base-dialog>
   </div>
-
 </template>
 
 <script>
@@ -85,16 +116,19 @@
 
     data() {
       return {
+        isShowDialog: false,
+        isShowCreate: false,
         isSelectAll: false,
         SelectAllValue: '全选',
         isBatch: false,
+        removeList: [],
         personnelListParam: {
           current: 1,
           totalPages: 14
         },
         personnelList: [
           {
-            id:1,
+            id: 1,
             isChecked: false,
             name: '测试名称',
             age: 20,
@@ -103,7 +137,7 @@
 
           },
           {
-            id:2,
+            id: 2,
             isChecked: false,
             name: '测试名称',
             age: 20,
@@ -111,7 +145,7 @@
             phone: 13000000
           },
           {
-            id:3,
+            id: 3,
             isChecked: false,
             name: '测试名称',
             age: 20,
@@ -121,15 +155,12 @@
         ]
       }
     },
-    computed: {
-    },
+    computed: {},
     methods: {
-      // getPersonnelList() {
-      //   this.$http.post(
-      //
-      //   )
-      //
-      // }
+      // 新建党员
+      createPersonnel() {
+        this.isShowCreate = true;
+      },
       // 是否全选
       selectAll() {
         if (this.isSelectAll === false) {
@@ -148,19 +179,42 @@
         }
       },
       // 单项删除
-      remove(removeId){
-        console.log(removeId)
+      remove(removeId) {
+        console.log(removeId);
+        this.removeList.push(removeId);
+        this.isShowDialog = true;
       },
+
       // 批量删除
       batchDeletion() {
-        let removeId = [];
+        let removeIdList = [];
         for (let i = 0; i < this.personnelList.length; i++) {
           if (this.personnelList[i].isChecked) {
-            removeId.push(this.personnelList[i].id)
+            removeIdList.push(this.personnelList[i].id)
           }
         }
-        console.log(removeId)
+        console.log(removeIdList);
+        this.removeList = removeIdList;
+        this.isShowDialog = true;
       },
+
+      // 二次确认删除
+      isRemove(isRemove) {
+        if (isRemove) {
+          // 这里发送删除请求
+          this.isShowDialog = false;
+        } else {
+          this.isShowDialog = false;
+        }
+      },
+      // 关闭Dialog
+      hideDialog(param) {
+        this[param] = false
+      },
+      // 插槽内关闭Dialog
+      close(){
+        this.isShowDialog = false;
+      }
     },
   }
 </script>
@@ -289,5 +343,54 @@
 
   .error {
 
+  }
+
+  .dialog-content {
+    width: 20%;
+    position: fixed;
+    max-height: 50%;
+    overflow: auto;
+    background: #fff;
+    top: 20%;
+    left: 40%;
+    z-index: 10;
+    border: 2px solid #464068;
+    padding: 2%;
+    line-height: 1.6;
+  }
+  .dialog-content h2{
+    text-align: center;
+  }
+  .dialog-close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .dialog-close:hover {
+    color: #4fc08d;
+  }
+  .dialog_button{
+    margin-top: 50px;
+    text-align: center;
+  }
+
+  .dialog_button button{
+    margin: 30px;
+    font-size: x-large;
+    cursor: pointer;
+    padding: 10px 20px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: #ffffff;
+  }
+
+  .from {
+    display: flex;
+    flex-direction: column;
   }
 </style>
