@@ -1,9 +1,9 @@
 <template>
-    <div class="dialog-wrap">
+    <div v-if="isShow" class="dialog-wrap">
       <div class="dialog-cover"  v-if="isShow" @click="closeMyself()"></div>
-      <transition name="drop">
+      <!--<transition name="drop">-->
         <slot v-if="isShow">empty</slot>
-      </transition>
+      <!--</transition>-->
     </div>
 </template>
 
@@ -28,23 +28,24 @@
 </script>
 
 <style scoped>
-  .drop-enter-active {
-    transition: all 1s ease;
-  }
-  .drop-leave-active {
-    transition: all 1s ease;
-  }
-  .drop-enter {
-    transform: translateY(-200px);
-    opacity: 0;
-  }
-  .drop-leave-active {
-    transform: translateY(-200px);
-    opacity: 0;
-  }
+  /*.drop-enter-active {*/
+    /*transition: all 1s ease;*/
+  /*}*/
+  /*.drop-leave-active {*/
+    /*transition: all 1s ease;*/
+  /*}*/
+  /*.drop-enter {*/
+    /*transform: translateY(-200px);*/
+    /*opacity: 0;*/
+  /*}*/
+  /*.drop-leave-active {*/
+    /*transform: translateY(-200px);*/
+    /*opacity: 0;*/
+  /*}*/
 
   .dialog-wrap {
     position: fixed;
+    top: 0;
     width: 100%;
     height: 100%;
   }
