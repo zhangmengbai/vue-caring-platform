@@ -2,7 +2,7 @@
     <div v-if="isShow" class="dialog-wrap">
       <div class="dialog-cover"  v-if="isShow" @click="closeMyself()"></div>
       <!--<transition name="drop">-->
-        <slot v-if="isShow">empty</slot>
+      <slot v-if="isShow">empty</slot>
       <!--</transition>-->
     </div>
 </template>
