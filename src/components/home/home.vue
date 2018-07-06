@@ -119,5 +119,9 @@
     -moz-border-radius: 10px;
     border-radius: 10px;
     color: #ffffff;
+    outline: none;
+  }
+  .dialog_button button:active{
+    background-color: #0E1D32;
   }
 </style>

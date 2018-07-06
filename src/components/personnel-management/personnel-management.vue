@@ -77,16 +77,19 @@
     </div>
     <!--二次确认删除窗口-->
     <base-dialog :is-show="isShowDialog" @on-close="hideDialog('isShowDialog')">
-      <h3>是否退出删除</h3>
-      <div class="dialog_button">
-        <button @click="isRemove(true)">确认</button>
-        <button @click="isRemove(false)">取消</button>
+      <div class="dialog-content">
+        <p class="dialog-close" @click="close()">x</p>
+        <h3>是否退出删除</h3>
+        <div class="dialog_button">
+          <button @click="isRemove(true)" style="background-color: #21A465">确认</button>
+          <button @click="isRemove(false)" style="background-color: #DD5145">取消</button>
+        </div>
       </div>
     </base-dialog>
     <!--新建党员信息窗口-->
     <base-dialog :is-show="isShowCreate" @on-close="hideDialog('isShowCreate')">
       <div class="dialog-content">
-        <p class="dialog-close" @click="close(false)">x</p>
+        <p class="dialog-close" @click="closeCreate()">x</p>
         <h2>请填写党员信息</h2>
         <div class="from">
           <label>党员姓名：
@@ -188,6 +191,7 @@
       // 批量删除
       batchDeletion() {
         let removeIdList = [];
+        // 将被选中项的索引添加到一个列表
         for (let i = 0; i < this.personnelList.length; i++) {
           if (this.personnelList[i].isChecked) {
             removeIdList.push(this.personnelList[i].id)
@@ -212,8 +216,12 @@
         this[param] = false
       },
       // 插槽内关闭Dialog
-      close(){
+      close() {
         this.isShowDialog = false;
+      },
+      // 插槽内关闭新建党员Dialog
+      closeCreate() {
+        this.isShowCreate = false;
       }
     },
   }
@@ -358,9 +366,11 @@
     padding: 2%;
     line-height: 1.6;
   }
-  .dialog-content h2{
+
+  .dialog-content h2 {
     text-align: center;
   }
+
   .dialog-close {
     position: absolute;
     right: 5px;
@@ -370,15 +380,17 @@
     text-align: center;
     cursor: pointer;
   }
+
   .dialog-close:hover {
     color: #4fc08d;
   }
-  .dialog_button{
+
+  .dialog_button {
     margin-top: 50px;
     text-align: center;
   }
 
-  .dialog_button button{
+  .dialog_button button {
     margin: 30px;
     font-size: x-large;
     cursor: pointer;
@@ -387,6 +399,11 @@
     -moz-border-radius: 10px;
     border-radius: 10px;
     color: #ffffff;
+    outline: none;
+  }
+
+  .dialog_button button:hover{
+    background-color: #0E1D32;
   }
 
   .from {
