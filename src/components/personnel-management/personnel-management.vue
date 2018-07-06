@@ -8,7 +8,7 @@
             <div class="font-icon">
               <font-awesome-icon :icon="['fas','plus']" size="lg"/>
             </div>
-            新建
+            新增
           </div>
           <div class="features-item">
             <div class="font-icon">
@@ -78,35 +78,54 @@
     <!--二次确认删除窗口-->
     <base-dialog :is-show="isShowDialog" @on-close="hideDialog('isShowDialog')">
       <div class="dialog-content">
-        <p class="dialog-close" @click="close()">x</p>
-        <h3>是否退出删除</h3>
-        <div class="dialog_button">
-          <button @click="isRemove(true)" style="background-color: #21A465">确认</button>
-          <button @click="isRemove(false)" style="background-color: #DD5145">取消</button>
+        <div class="dialog-header">
+          <p class="dialog-header-tip">提示</p>
+          <div class="dialog-close" @click="close()">
+            <font-awesome-icon :icon="['fas','times']" size="1x"/>
+          </div>
+        </div>
+        <div class="dialog-section">
+          <div>
+            <font-awesome-icon :icon="['fas','question-circle']" size="3x"/>
+          </div>
+          <h3>确定要删除吗？</h3>
+        </div>
+        <div class="dialog-button">
+          <button @click="isRemove(true)" class="determine">确认</button>
+          <button @click="isRemove(false)" class="cancel">取消</button>
         </div>
       </div>
     </base-dialog>
     <!--新建党员信息窗口-->
     <base-dialog :is-show="isShowCreate" @on-close="hideDialog('isShowCreate')">
       <div class="dialog-content">
-        <p class="dialog-close" @click="closeCreate()">x</p>
-        <h2>请填写党员信息</h2>
+        <div class="dialog-header">
+          <p class="dialog-header-tip">新增党员</p>
+          <div class="dialog-close" @click="closeCreate()">
+            <font-awesome-icon :icon="['fas','times']" size="1x"/>
+          </div>
+        </div>
+        <div class="dialog-section" id="createSection">
+          <h3>填入党员信息</h3>
+        </div>
         <div class="from">
-          <label>党员姓名：
+          <label class="from-item">党员姓名：
             <input class="from-input" type="text">
           </label>
-          <label>党员姓名：
+          <label class="from-item">年龄：
             <input class="from-input" type="text">
           </label>
-          <label>党员姓名：
+          <label class="from-item">生日：
             <input class="from-input" type="text">
           </label>
-          <label>党员姓名：
+          <label class="from-item">联系电话：
             <input class="from-input" type="text">
           </label>
-          <label>党员姓名：
-            <input class="from-input" type="text">
-          </label>
+
+        </div>
+        <div class="dialog-button">
+          <button class="determine">确认</button>
+          <button class="cancel">取消</button>
         </div>
       </div>
     </base-dialog>
@@ -356,14 +375,13 @@
   .dialog-content {
     width: 20%;
     position: fixed;
-    max-height: 50%;
+    max-height: 80%;
     overflow: auto;
     background: #fff;
-    top: 20%;
+    top: 5%;
     left: 40%;
     z-index: 10;
-    border: 2px solid #464068;
-    padding: 2%;
+    border: 1px solid #707070;
     line-height: 1.6;
   }
 
@@ -371,43 +389,90 @@
     text-align: center;
   }
 
+  .dialog-header {
+    display: flex;
+    height: 40px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #78909C;
+    color: #ffffff;
+  }
+
+  .dialog-header-tip {
+    margin-left: 10px;
+  }
+
   .dialog-close {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    width: 20px;
-    height: 20px;
-    text-align: center;
+    margin-right: 10px;
+    font-size: 18px;
     cursor: pointer;
+    color: #ffffff;
   }
 
   .dialog-close:hover {
-    color: #4fc08d;
+    color: #000000;
   }
-
-  .dialog_button {
-    margin-top: 50px;
+.dialog-section{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 100px;
+  margin-top: 20px;
+  color: #7A797A ;
+}
+  .dialog-button {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
     text-align: center;
   }
 
-  .dialog_button button {
-    margin: 30px;
-    font-size: x-large;
+  .dialog-button button {
+    margin: 16px 16px;
+    font-size: 16px;
     cursor: pointer;
-    padding: 10px 20px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    color: #ffffff;
+    padding: 5px 20px;
     outline: none;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
   }
 
-  .dialog_button button:hover{
-    background-color: #0E1D32;
+  .determine {
+    background-color: #78909C;
+    color: #ffffff;
+  }
+
+  .cancel {
+    background-color: #ffffff;
+    color: #78909C;
+    border: 1px solid #BBBBBB;
+  }
+
+  .dialog-button button:hover {
+    background-color: #666666;
+    color: #ffffff;
   }
 
   .from {
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
+    height: 300px;
+
+  }
+
+  .from-item {
+    width: 260px;
+    margin-left: 20px;
+  }
+
+  .from-item input {
+    border: 1px solid #BBBBBB;
+    font-size: 18px;
+  }
+  #createSection{
+    height: auto;
   }
 </style>
