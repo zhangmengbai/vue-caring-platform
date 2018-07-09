@@ -4,13 +4,13 @@
       <div class="header-top">
         <div class="title">党员管理</div>
         <div class="features">
-          <div class="features-item" @click="createPersonnel()">
+          <div class="features-item" @click="showDialog('isShowCreate')">
             <div class="font-icon">
               <font-awesome-icon :icon="['fas','plus']" size="lg"/>
             </div>
             新增
           </div>
-          <div class="features-item">
+          <div class="features-item" @click="showDialog('isShowUpload')">
             <div class="font-icon">
               <font-awesome-icon :icon="['fas','outdent']" size="lg"/>
             </div>
@@ -73,14 +73,16 @@
           <input type="button" class="delete-btn" value="删除选中项" @click="batchDeletion()">
         </div>
       </div>
-      <page :personnelListParam="personnelListParam" :personnelList="personnelList"></page>
+      <!--页码组件-->
+      <page :personnelListParam="personnelListParam" :personnelList="personnelList"
+            @switch-page="switchPage(personnelListParam.current)"></page>
     </div>
     <!--二次确认删除窗口-->
-    <base-dialog :is-show="isShowDialog" @on-close="hideDialog('isShowDialog')">
+    <base-dialog :is-show="isShowDelete" @on-close="hideDialog('isShowDelete')">
       <div class="dialog-content">
         <div class="dialog-header">
           <p class="dialog-header-tip">提示</p>
-          <div class="dialog-close" @click="close()">
+          <div class="dialog-close" @click="hideDialog('isShowDelete')">
             <font-awesome-icon :icon="['fas','times']" size="1x"/>
           </div>
         </div>
@@ -101,7 +103,7 @@
       <div class="dialog-content">
         <div class="dialog-header">
           <p class="dialog-header-tip">新增党员</p>
-          <div class="dialog-close" @click="closeCreate()">
+          <div class="dialog-close" @click="hideDialog('isShowCreate')">
             <font-awesome-icon :icon="['fas','times']" size="1x"/>
           </div>
         </div>
@@ -109,23 +111,66 @@
           <h3>填入党员信息</h3>
         </div>
         <div class="from">
-          <label class="from-item">党员姓名：
-            <input class="from-input" type="text">
-          </label>
-          <label class="from-item">年龄：
-            <input class="from-input" type="text">
-          </label>
-          <label class="from-item">生日：
-            <input class="from-input" type="text">
-          </label>
-          <label class="from-item">联系电话：
-            <input class="from-input" type="text">
-          </label>
-
+          <div class="from-item">
+            <p>党员姓名：</p>
+            <input class="from-input" type="text" v-model="createName">
+          </div>
+          <div class="from-item">
+            <p>年龄：</p>
+            <input class="from-input" type="number" maxlength="3" v-model="createAge">
+          </div>
+          <div class="from-item">
+            <p>生日：</p>
+            <input class="from-input" type="text" v-model="createBirthday">
+          </div>
+          <div class="from-item">
+            <p>联系电话：</p>
+            <input class="from-input" type="let" maxlength="11" v-model="createPhone" id="create-phone">
+          </div>
+          <b v-show="error !== ''&& isShowError === true" class="error">{{error}}</b>
         </div>
         <div class="dialog-button">
-          <button class="determine">确认</button>
-          <button class="cancel">取消</button>
+          <button class="determine" @click="submitCreate(createName,createAge,createBirthday,createPhone)">确认</button>
+          <button class="cancel" @click="hideDialog('isShowCreate')">取消</button>
+        </div>
+      </div>
+    </base-dialog>
+    <!--导入数据-->
+    <base-dialog :is-show="isShowUpload" @on-close="hideDialog('isShowUpload')">
+      <div class="dialog-content" id="upload-content">
+        <div class="dialog-header">
+          <p class="dialog-header-tip">导入数据</p>
+          <div class="dialog-close" @click="hideDialog('isShowUpload')">
+            <font-awesome-icon :icon="['fas','times']" size="1x"/>
+          </div>
+        </div>
+        <div class="dialog-section" id="upload-section">
+          <div class="dialog-section-item">
+            <div id="download-template">
+              <div class="font-icon">
+                <font-awesome-icon :icon="['fas','cloud-download-alt']" size="1x"/>
+              </div>
+              <p>下载模板</p>
+            </div>
+            <div class="tip">为提高导入的效率，请下载并使用系统提供的模板。</div>
+            <button class="download-button">下载模板</button>
+          </div>
+          <div class="dialog-section-item">
+            <div id="upload-template">
+              <div class="font-icon">
+                <font-awesome-icon :icon="['fas','cloud-upload-alt']" size="1x"/>
+              </div>
+              <p>上传文件</p>
+            </div>
+            <div class="tip">仅支持*******文件类型，文件大小*****</div>
+            <div>
+              <input type="file" class="upload-button">
+            </div>
+          </div>
+        </div>
+        <div class="dialog-button">
+          <button class="determine" @click="">确认</button>
+          <button class="cancel" @click="hideDialog('isShowUpload')">取消</button>
         </div>
       </div>
     </base-dialog>
@@ -138,12 +183,19 @@
 
     data() {
       return {
-        isShowDialog: false,
+        error: '',
+        isShowError: false,
+        isShowDelete: false,
         isShowCreate: false,
+        isShowUpload: false,
         isSelectAll: false,
         SelectAllValue: '全选',
         isBatch: false,
         removeList: [],
+        createName: '',
+        createAge: null,
+        createBirthday: '',
+        createPhone: null,
         personnelListParam: {
           current: 1,
           totalPages: 14
@@ -179,23 +231,44 @@
     },
     computed: {},
     methods: {
-      // 新建党员
-      createPersonnel() {
-        this.isShowCreate = true;
+      // 切页
+      switchPage(param) {
+        console.log(param)
+      },
+      // 公共弹出dialog方法
+      showDialog(param) {
+        this[param] = true;
+      },
+      // 确认新建党员
+      submitCreate(createName, createAge, createBirthday, createPhone) {
+        // 检测提交的信息格式是否正确
+        if (createName !== '' &&
+          createAge !== null && createAge.length <= 3 &&
+          createBirthday !== '' &&
+          createPhone !== null && createPhone.length === 11) {
+          // 发送请求提交信息，同时返回新的用户列表信息
+          this.isShowCreate = false;
+          this.isShowError = false;
+          console.log("aa")
+        } else {
+          this.error = '党员信息格式有误，提示：优先核对手机号码位数';
+          this.isShowError = true;
+          console.log("bb")
+        }
       },
       // 是否全选
       selectAll() {
         if (this.isSelectAll === false) {
           for (let i = 0; i < this.personnelList.length; i++) {
             this.personnelList[i].isChecked = true;
-            this.selectAllValue = '取消全选';
+            this.SelectAllValue = '取消全选';
             this.isSelectAll = true;
           }
         }
         else {
           for (let i = 0; i < this.personnelList.length; i++) {
             this.personnelList[i].isChecked = false;
-            this.selectAllValue = '全选';
+            this.SelectAllValue = '全选';
             this.isSelectAll = false;
           }
         }
@@ -204,7 +277,7 @@
       remove(removeId) {
         console.log(removeId);
         this.removeList.push(removeId);
-        this.isShowDialog = true;
+        this.isShowDelete = true;
       },
 
       // 批量删除
@@ -218,30 +291,22 @@
         }
         console.log(removeIdList);
         this.removeList = removeIdList;
-        this.isShowDialog = true;
+        this.isShowDelete = true;
       },
 
       // 二次确认删除
       isRemove(isRemove) {
         if (isRemove) {
           // 这里发送删除请求
-          this.isShowDialog = false;
+          this.isShowDelete = false;
         } else {
-          this.isShowDialog = false;
+          this.isShowDelete = false;
         }
       },
       // 关闭Dialog
       hideDialog(param) {
         this[param] = false
       },
-      // 插槽内关闭Dialog
-      close() {
-        this.isShowDialog = false;
-      },
-      // 插槽内关闭新建党员Dialog
-      closeCreate() {
-        this.isShowCreate = false;
-      }
     },
   }
 </script>
@@ -369,7 +434,9 @@
   }
 
   .error {
-
+    color: #EA2000;
+    font-size: 14px;
+    margin-left: 20px;
   }
 
   .dialog-content {
@@ -383,6 +450,12 @@
     z-index: 10;
     border: 1px solid #707070;
     line-height: 1.6;
+  }
+
+  #upload-content {
+    width: 40%;
+    left: 30%;
+    height: 450px;
   }
 
   .dialog-content h2 {
@@ -412,16 +485,68 @@
   .dialog-close:hover {
     color: #000000;
   }
-.dialog-section{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  height: 100px;
-  margin-top: 20px;
-  color: #7A797A ;
-}
+
+  .dialog-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: auto;
+    margin-top: 20px;
+    color: #7A797A;
+  }
+
+  #upload-section {
+    align-items: start;
+    padding-left: 20px;
+  }
+
+  .dialog-section-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+
+  #download-template {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+  }
+
+  .tip {
+    font-size: 14px;
+    margin-left: 30px;
+  }
+
+  .download-button {
+    width: 110px;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 20px;
+    outline: none;
+    margin-left: 30px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-color: #78909C;
+    color: #ffffff;
+  }
+
+  #upload-template {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+  }
+
+  .upload-button {
+    margin-left: 30px;
+  }
+
   .dialog-button {
+    position: relative;
+    bottom: -60px;
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
@@ -472,7 +597,13 @@
     border: 1px solid #BBBBBB;
     font-size: 18px;
   }
-  #createSection{
+
+  #create-phone::-webkit-outer-spin-button,
+  #create-phone::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+  }
+
+  #createSection {
     height: auto;
   }
 </style>

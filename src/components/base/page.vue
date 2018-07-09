@@ -63,7 +63,7 @@
       goto: function (index) {
         if (index === this.personnelListParam.current) return;
         this.personnelListParam.current = index;
-        //这里可以发送ajax请求
+        this.$emit('switch-page');
       }
     }
   }
