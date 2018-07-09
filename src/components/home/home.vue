@@ -2,7 +2,8 @@
   <div class="home">
     <h-header></h-header>
     <div class="section">
-      <tab @showDialog="setShow(true)"></tab>
+      <!--左侧导航-->
+      <tab @show-dialog="setShow(true)"></tab>
       <router-view/>
     </div>
     <!--二次确认退出-->
@@ -10,7 +11,7 @@
       <div class="dialog-content">
         <div class="dialog-header">
           <p class="dialog-header-tip">提示</p>
-          <div class="dialog-close" @click="close()">
+          <div class="dialog-close" @click="hideDialog('isShowDialog')">
             <font-awesome-icon :icon="['fas','times']" size="1x"/>
           </div>
         </div>
@@ -50,11 +51,11 @@
       hideDialog (param) {
         this[param] = false
       },
-      // 退出确认
+      // 退出确认弹窗
       setShow(show){
         this.isShowDialog = show
       },
-      //
+      // 登出
       loginOut(is){
         if (is){
           this.$router.replace({name: 'login'})
@@ -62,9 +63,6 @@
           this.isShowDialog = is
         }
       },
-      close(){
-        this.isShowDialog = false;
-      }
     },
     mounted() {
       this.getStorage()

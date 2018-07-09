@@ -44,7 +44,7 @@
     name: "tab",
     methods:{
       exitConfirm(){
-        this.$emit("showDialog", true)
+        this.$emit("show-dialog", true)
       }
     }
   }
