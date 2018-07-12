@@ -19,9 +19,11 @@
     "@fortawesome/free-regular-svg-icons": "^5.1.0",
     "@fortawesome/free-solid-svg-icons": "^5.1.0",
     "@fortawesome/vue-fontawesome": "^0.1.0",
+    "babel-polyfill": "^6.26.0",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1",
-    "vue-resource": "^1.5.1"
+    "vue-multiselect": "^2.1.0",
+    "vue-resource": "^1.5.1",
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

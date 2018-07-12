@@ -25,12 +25,35 @@
         </div>
       </div>
       <div class="header-bottom">
-        <select name="筛选条件" id="">
-          <option value="筛选条件" selected="selected">筛选条件</option>
-          <option value="年龄">年龄</option>
-          <option value="姓氏">姓氏</option>
-          <option value="电话">电话</option>
-        </select>
+        <!--<select name="筛选条件" id="">-->
+        <!--<option value="筛选条件" selected="selected">筛选条件</option>-->
+        <!--<option value="年龄">年龄</option>-->
+        <!--<option value="姓氏">姓氏</option>-->
+        <!--<option value="电话">电话</option>-->
+        <!--</select>-->
+        <multiselect v-model="multiSelectValue"
+                     :options="options"
+                     :noResult="noResult"
+                     placeholder="筛选条件"
+                     select-label="加入筛选项"
+                     select-groupLabel="1"
+                     selected-label="已选择"
+                     deselect-label="取消选择该选项"
+                     deselect-groupLabel="4"
+                     style="width: auto;">
+          <span slot="noResult">未找到搜索项</span>
+        </multiselect>
+        <multiselect v-model="selectedCountries" id="ajax" label="name" track-by="code" placeholder="输入要搜索的关键字"
+                     open-direction="bottom" :options="countries" :multiple="true" :searchable="true"
+                     :loading="isLoading" :internal-search="false" :clear-on-select="false" :close-on-select="false"
+                     :options-limit="300" :limit="3" :limit-text="limitText" :max-height="600" :show-no-results="true"
+                     :hide-selected="true" @search-change="asyncFind(selectedCountries)" style="width: auto">
+          <template slot="clear" slot-scope="props">
+            <div class="multiselect__clear" v-if="selectedCountries.length"
+                 @mousedown.prevent.stop="clearAll(props.search)"></div>
+          </template>
+          <span slot="noResult">未找到搜索项</span>
+        </multiselect>
       </div>
     </header>
     <table v-if="personnelListParam.current >= 1 && personnelListParam.current <= personnelListParam.totalPages">
@@ -127,7 +150,7 @@
             <p>联系电话：</p>
             <input class="from-input" type="let" maxlength="11" v-model="createPhone" id="create-phone">
           </div>
-          <b v-show="error !== ''&& isShowError === true" class="error">{{error}}</b>
+          <b class="error">{{error}}</b>
         </div>
         <div class="dialog-button">
           <button class="determine" @click="submitCreate(createName,createAge,createBirthday,createPhone)">确认</button>
@@ -155,7 +178,7 @@
             <div class="tip">为提高导入的效率，请下载并使用系统提供的模板。</div>
             <button class="download-button">下载模板</button>
           </div>
-          <div class="dialog-section-item">
+          <div class="dialog-section-item" style="height: 160px;">
             <div id="upload-template">
               <div class="font-icon">
                 <font-awesome-icon :icon="['fas','cloud-upload-alt']" size="1x"/>
@@ -163,13 +186,17 @@
               <p>上传文件</p>
             </div>
             <div class="tip">仅支持*******文件类型，文件大小*****</div>
-            <div>
-              <input type="file" class="upload-button">
-            </div>
+            <form>
+              <input type="file" class="file-button" id="uploadFile" @click="resText = ''">
+            </form>
+            <button class="upload-button" @click="submitUpload()" :disabled="buttonType" :class="{disabled:isDisabled}">
+              {{submitUploadText}}
+            </button>
+            <p :class="{error:isError,success:isSuccess}" class="tip">{{resText}}</p>
           </div>
         </div>
-        <div class="dialog-button">
-          <button class="determine" @click="">确认</button>
+        <div class="dialog-button" id="upload-button-div">
+          <button class="determine" @click="hideDialog('isShowUpload')">确认</button>
           <button class="cancel" @click="hideDialog('isShowUpload')">取消</button>
         </div>
       </div>
@@ -178,13 +205,28 @@
 </template>
 
 <script>
+  import 'vue-multiselect/dist/vue-multiselect.min.css'
+
   export default {
     name: "personnel-management",
 
     data() {
       return {
+        // 下拉选项/搜索选项插件相关参数
+        multiSelectValue: null,
+        options: ['年龄降序', '年龄升序'],
+        selectedCountries: [],
+        countries: [],
+        isLoading: false,
+        noResult: null,
+        selected: null,
+        // 网络请求相关参数
+        apiUrl: '',
+        resText: '',
         error: '',
-        isShowError: false,
+        // 页面控制相关参数
+        isError: false,
+        isSuccess: false,
         isShowDelete: false,
         isShowCreate: false,
         isShowUpload: false,
@@ -196,6 +238,9 @@
         createAge: null,
         createBirthday: '',
         createPhone: null,
+        isDisabled: false,
+        buttonType: false,
+        submitUploadText: '开始导入',
         personnelListParam: {
           current: 1,
           totalPages: 14
@@ -231,6 +276,35 @@
     },
     computed: {},
     methods: {
+      // 搜索筛选相关方法
+      limitText (count) {
+        return `等 ${count} 个关键字`
+      },
+      // 根据搜索内容筛选
+      asyncFind (query) {
+        this.isLoading = true;
+        this.apiUrl= '';
+        // 发送请求
+        // ajaxFindCountry(query).then(response => {
+        //   this.countries = response
+        //   this.isLoading = false
+        // })
+        this.$http.post(this.apiUrl, this.selectedCountries).then(
+            response => {
+              console.log("success callback");
+              this.countries = response;
+              this.isLoading = false
+            },
+            response =>{
+              this.resText = response.error;
+                console.log("error callback");
+              this.isLoading = false;
+            }
+          )
+      },
+      clearAll () {
+        this.selectedCountries = []
+      },
       // 切页
       switchPage(param) {
         console.log(param)
@@ -248,12 +322,8 @@
           createPhone !== null && createPhone.length === 11) {
           // 发送请求提交信息，同时返回新的用户列表信息
           this.isShowCreate = false;
-          this.isShowError = false;
-          console.log("aa")
         } else {
           this.error = '党员信息格式有误，提示：优先核对手机号码位数';
-          this.isShowError = true;
-          console.log("bb")
         }
       },
       // 是否全选
@@ -303,9 +373,34 @@
           this.isShowDelete = false;
         }
       },
-      // 关闭Dialog
+      // 导入提交
+      submitUpload() {
+        this.submitUploadText = '正在导入中';
+        this.isDisabled = true;
+        this.buttonType = true;
+        // this.apiUrl = '';
+        // let fileForm = document.getElementById('uploadFile');
+        // if (fileForm){
+        //   let fd = new FormData(fileForm);
+        //   this.$http.post(this.apiUrl, fd).then(
+        //     response => {
+        //       console.log("success callback");
+        //       this.resText = '导入成功'
+        //     },
+        //     response =>{
+        //       this.resText = response.error;
+        //         console.log("error callback");
+        //     }
+        //   )
+        // }else {
+        //   this.resText = '您还未选择要上传的文件'
+        // }
+      },
+      // 通用关闭Dialog方法
       hideDialog(param) {
-        this[param] = false
+        this[param] = false;
+        this.error = '';
+        this.resText = '';
       },
     },
   }
@@ -366,6 +461,8 @@
 
   .header-bottom {
     height: 50px;
+    display: flex;
+    flex-direction: row;
   }
 
   .title {
@@ -439,6 +536,12 @@
     margin-left: 20px;
   }
 
+  .success {
+    color: #84DA45;
+    font-size: 14px;
+    margin-left: 20px;
+  }
+
   .dialog-content {
     width: 20%;
     position: fixed;
@@ -455,7 +558,7 @@
   #upload-content {
     width: 40%;
     left: 30%;
-    height: 450px;
+    height: 550px;
   }
 
   .dialog-content h2 {
@@ -540,17 +643,34 @@
     justify-content: start;
   }
 
-  .upload-button {
+  .file-button {
     margin-left: 30px;
   }
 
+  .upload-button {
+    width: 120px;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 20px;
+    outline: none;
+    margin-left: 30px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-color: #78909C;
+    color: #ffffff;
+  }
+
   .dialog-button {
-    position: relative;
-    bottom: -60px;
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
     text-align: center;
+  }
+
+  #upload-button-div {
+    position: relative;
+    bottom: -60px;
   }
 
   .dialog-button button {
@@ -562,6 +682,10 @@
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
+  }
+
+  .disabled {
+    opacity: .7;
   }
 
   .determine {
