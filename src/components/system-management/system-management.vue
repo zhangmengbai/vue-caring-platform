@@ -152,14 +152,15 @@
   }
 
   .system-list ul {
-    display: flex;
-    justify-content: space-around;
     list-style: none;
     margin-top: 150px;
     width: 100%;
     text-align: left;
   }
-
+  .system-list li{
+    float: left;
+    width: 25%;
+  }
   .content-item {
     width: 150px;
     height: 120px;
@@ -169,6 +170,7 @@
     text-align: center;
     line-height: 120px;
     cursor: pointer;
+    margin: 0 auto;
   }
 
   .system-content {
