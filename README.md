@@ -1,6 +1,6 @@
 # vue-caring-platform
 
-> 曲靖市委组织党员关爱平台
+> 后台管理系统
 
 ## Build Setup
 
